@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bclnet/JsonUI/schema/jsonui.schema.json",
+  "title": "JsonUI form definition",
+  "description": "A JSON document rendered by JsonUI on iOS (SwiftUI) and Android (Jetpack Compose). See docs/SCHEMA.md.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "#/$defs/node" },
+    {
+      "properties": {
+        "_ui": {
+          "type": "object",
+          "properties": {
+            "version": { "type": "integer", "const": 1 },
+            "state": { "type": "object" },
+            "script": { "type": "string" },
+            "strings": { "type": "object", "additionalProperties": { "type": "string" } }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "dynamic": {
+      "description": "A literal, a binding ($name / {\"$bind\":...}), an expression (${...} / {\"$expr\":...}) or a template string.",
+      "anyOf": [
+        { "type": ["string", "number", "boolean", "null", "array", "object"] },
+        { "type": "object", "properties": { "$bind": { "type": "string" } }, "required": ["$bind"], "additionalProperties": false },
+        { "type": "object", "properties": { "$expr": { "type": "string" } }, "required": ["$expr"], "additionalProperties": false }
+      ]
+    },
+    "binding": { "type": "string", "pattern": "^\\$[A-Za-z_][A-Za-z0-9_.\\[\\]]*$" },
+    "action": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "object", "properties": { "script": { "type": "string" } }, "required": ["script"], "additionalProperties": false },
+        { "type": "object", "properties": { "name": { "type": "string" }, "args": { "type": "object" } }, "required": ["name"], "additionalProperties": false },
+        { "type": "object", "properties": { "set": { "type": "object" } }, "required": ["set"], "additionalProperties": false },
+        { "type": "array", "items": { "$ref": "#/$defs/action" } }
+      ]
+    },
+    "color": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "object", "properties": { "light": { "type": "string" }, "dark": { "type": "string" } } }
+      ]
+    },
+    "labelOrNode": { "anyOf": [ { "$ref": "#/$defs/dynamic" }, { "$ref": "#/$defs/node" } ] },
+    "content": { "anyOf": [ { "$ref": "#/$defs/node" }, { "type": "array", "items": { "$ref": "#/$defs/node" } } ] },
+    "modifier": {
+      "type": "object",
+      "properties": { "type": { "type": "string" } },
+      "required": ["type"]
+    },
+    "node": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "id": { "type": "string" },
+        "content": { "$ref": "#/$defs/content" },
+        "hidden": { "$ref": "#/$defs/dynamic" },
+        "disabled": { "$ref": "#/$defs/dynamic" },
+        "modifiers": { "type": "array", "items": { "$ref": "#/$defs/modifier" } },
+        "padding": { "anyOf": [ { "type": "number" }, { "type": "boolean" }, { "type": "object" } ] },
+        "frame": { "type": "object" },
+        "font": { "anyOf": [ { "type": "string" }, { "type": "object" } ] },
+        "bold": { "$ref": "#/$defs/dynamic" },
+        "italic": { "$ref": "#/$defs/dynamic" },
+        "foregroundColor": { "$ref": "#/$defs/color" },
+        "background": { "$ref": "#/$defs/color" },
+        "cornerRadius": { "type": "number" },
+        "border": { "type": "object", "properties": { "color": { "$ref": "#/$defs/color" }, "width": { "type": "number" } } },
+        "opacity": { "$ref": "#/$defs/dynamic" },
+        "onAppear": { "$ref": "#/$defs/action" },
+        "onTap": { "$ref": "#/$defs/action" },
+        "accessibilityLabel": { "type": "string" },
+
+        "text": { "$ref": "#/$defs/dynamic" },
+        "title": { "$ref": "#/$defs/dynamic" },
+        "label": { "$ref": "#/$defs/labelOrNode" },
+        "header": { "$ref": "#/$defs/labelOrNode" },
+        "footer": { "$ref": "#/$defs/labelOrNode" },
+        "isOn": { "$ref": "#/$defs/binding" },
+        "selection": { "$ref": "#/$defs/binding" },
+        "value": { "$ref": "#/$defs/dynamic" },
+        "options": { "$ref": "#/$defs/dynamic" },
+        "action": { "$ref": "#/$defs/action" },
+        "onChange": { "$ref": "#/$defs/action" },
+        "onCommit": { "$ref": "#/$defs/action" },
+        "error": { "$ref": "#/$defs/dynamic" },
+        "keyboard": { "enum": ["default", "email", "number", "decimal", "phone", "url"] },
+        "autocapitalization": { "enum": ["none", "words", "sentences", "characters"] },
+        "style": { "$ref": "#/$defs/dynamic" },
+        "role": { "enum": ["destructive", "cancel"] },
+        "components": { "enum": ["date", "time", "dateAndTime"] },
+        "min": { "$ref": "#/$defs/dynamic" },
+        "max": { "$ref": "#/$defs/dynamic" },
+        "step": { "type": "number" },
+        "alignment": { "type": "string" },
+        "spacing": { "type": "number" },
+        "axis": { "enum": ["vertical", "horizontal"] },
+        "data": { "$ref": "#/$defs/dynamic" },
+        "item": { "type": "string" },
+        "index": { "type": "string" },
+        "condition": { "$ref": "#/$defs/dynamic" },
+        "else": { "$ref": "#/$defs/content" },
+        "systemName": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "$ref": "#/$defs/dynamic" },
+        "systemImage": { "type": "string" },
+        "minHeight": { "type": "number" },
+        "minLength": { "type": "number" },
+        "lineLimit": { "type": "integer" },
+        "multilineTextAlignment": { "enum": ["leading", "center", "trailing"] }
+      },
+      "required": ["type"]
+    }
+  }
+}

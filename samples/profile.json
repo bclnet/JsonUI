@@ -1,0 +1,71 @@
+{
+  "_ui": {
+    "version": 1,
+    "state": {
+      "name": "Sky",
+      "bio": "",
+      "birthday": "1990-05-04",
+      "country": "us",
+      "notifications": true,
+      "volume": 0.5,
+      "seats": 2,
+      "phones": [ { "label": "Mobile", "number": "" } ]
+    },
+    "script": "function addPhone() { var p = state.phones; p.push({ label: 'Other', number: '' }); state.phones = p; }\nfunction removePhone(i) { var p = state.phones; p.splice(i, 1); state.phones = p; }"
+  },
+  "type": "Form",
+  "content": [
+    {
+      "type": "Section",
+      "header": "Profile",
+      "content": [
+        { "type": "TextField", "title": "Name", "text": "$name" },
+        { "type": "TextEditor", "text": "$bio", "minHeight": 80 },
+        { "type": "DatePicker", "label": "Birthday", "selection": "$birthday", "components": "date" },
+        { "type": "Picker", "label": "Country", "selection": "$country", "style": "menu",
+          "options": [ { "value": "us", "label": "United States" }, { "value": "ca", "label": "Canada" }, { "value": "mx", "label": "Mexico" } ] }
+      ]
+    },
+    {
+      "type": "Section",
+      "header": "Phones",
+      "content": [
+        {
+          "type": "ForEach",
+          "data": "$phones",
+          "item": "phone",
+          "index": "i",
+          "content": {
+            "type": "HStack",
+            "spacing": 8,
+            "content": [
+              { "type": "TextField", "title": "Label", "text": "$phone.label", "frame": { "width": 90 } },
+              { "type": "TextField", "title": "Number", "text": "$phone.number", "keyboard": "phone" },
+              { "type": "Button", "label": "Remove", "role": "destructive", "action": "js: removePhone(i)" }
+            ]
+          }
+        },
+        { "type": "Button", "label": "Add phone", "action": "js: addPhone()" }
+      ]
+    },
+    {
+      "type": "Section",
+      "header": "Preferences",
+      "content": [
+        { "type": "Toggle", "label": "Notifications", "isOn": "$notifications", "onChange": { "name": "track", "args": { "event": "toggle", "value": "$notifications" } } },
+        { "type": "If", "condition": "$notifications", "content": [
+            { "type": "Slider", "label": "Volume", "value": "$volume", "min": 0, "max": 1, "step": 0.1 },
+            { "type": "Text", "text": "Volume ${Math.round(state.volume * 100)}%", "font": "caption" }
+        ] },
+        { "type": "Stepper", "label": "Seats: ${state.seats}", "value": "$seats", "min": 1, "max": 8 }
+      ]
+    },
+    {
+      "type": "Section",
+      "content": [
+        { "type": "Button", "label": "Save", "style": "borderedProminent", "action": { "name": "save", "args": { "name": "$name", "country": "$country" } } },
+        { "type": "Button", "label": "Reset", "role": "cancel", "action": { "set": { "name": "", "bio": "", "seats": 1 } } }
+      ]
+    }
+  ]
+}

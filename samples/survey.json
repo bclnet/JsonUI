@@ -1,0 +1,48 @@
+{
+  "_ui": {
+    "version": 1,
+    "state": { "step": 1, "rating": 3, "comments": "", "recommend": null },
+    "strings": { "title": "Feedback", "thanks": "Thank you for your feedback!" }
+  },
+  "type": "VStack",
+  "alignment": "leading",
+  "spacing": 16,
+  "padding": 16,
+  "content": [
+    { "type": "Text", "text": "@title", "font": "largeTitle", "bold": true },
+    { "type": "Text", "text": "Step ${state.step} of 3", "font": "subheadline", "foregroundColor": "secondary" },
+    { "type": "Divider" },
+    {
+      "type": "If", "condition": "${state.step === 1}",
+      "content": [
+        { "type": "Text", "text": "How would you rate the app?" },
+        { "type": "Picker", "selection": "$rating", "style": "segmented", "options": [1, 2, 3, 4, 5] },
+        { "type": "Button", "label": "Next", "action": { "set": { "step": 2 } } }
+      ]
+    },
+    {
+      "type": "If", "condition": "${state.step === 2}",
+      "content": [
+        { "type": "Text", "text": "Would you recommend it?" },
+        { "type": "HStack", "spacing": 12, "content": [
+          { "type": "Button", "label": "Yes", "style": "${state.recommend === true ? 'borderedProminent' : 'bordered'}", "action": { "set": { "recommend": true } } },
+          { "type": "Button", "label": "No", "style": "${state.recommend === false ? 'borderedProminent' : 'bordered'}", "action": { "set": { "recommend": false } } }
+        ] },
+        { "type": "TextEditor", "text": "$comments", "minHeight": 100, "border": { "color": "gray", "width": 1 }, "cornerRadius": 6 },
+        { "type": "HStack", "content": [
+          { "type": "Button", "label": "Back", "action": { "set": { "step": 1 } } },
+          { "type": "Spacer" },
+          { "type": "Button", "label": "Submit", "style": "borderedProminent", "disabled": "${state.recommend === null}",
+            "action": [ { "name": "submitSurvey", "args": { "rating": "$rating", "recommend": "$recommend", "comments": "$comments" } }, { "set": { "step": 3 } } ] }
+        ] }
+      ]
+    },
+    {
+      "type": "If", "condition": "${state.step === 3}",
+      "content": [
+        { "type": "Label", "title": "@thanks", "systemImage": "checkmark.circle", "foregroundColor": "green" }
+      ],
+      "else": { "type": "Spacer" }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# Swift Package Manager
+/.build
+/Packages
+/*.xcodeproj
+/.swiftpm
+xcuserdata/
+DerivedData/
+.DS_Store
+
+# Android / Gradle
+android/.gradle/
+android/build/
+android/*/build/
+android/local.properties
+android/.idea/
+android/*.iml
+android/.kotlin/

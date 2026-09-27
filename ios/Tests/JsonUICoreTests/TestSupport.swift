@@ -4,7 +4,7 @@ import XCTest
 
 enum Samples {
     static var directory: URL {
-        URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("samples")
+        URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("samples")
     }
 
     static func load(_ name: String) throws -> JsonDocument {

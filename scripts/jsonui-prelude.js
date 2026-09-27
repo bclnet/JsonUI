@@ -3,7 +3,7 @@
 // This file is the single source of truth for the JavaScript runtime that
 // JsonUI installs into the script engine (JavaScriptCore on Apple platforms,
 // QuickJS on Android). Copies are embedded in
-//   Sources/JsonUICore/ScriptPrelude.swift
+//   ios/Sources/JsonUICore/ScriptPrelude.swift
 //   android/jsonui-core/src/main/kotlin/com/bclnet/jsonui/ScriptPrelude.kt
 // and regenerated with `python3 scripts/sync-prelude.py`.
 //

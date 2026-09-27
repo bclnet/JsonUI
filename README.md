@@ -4,7 +4,7 @@ Render forms and simple screens on iOS and Android from one JSON definition.
 
 | platform | library | UI toolkit | script engine |
 | --- | --- | --- | --- |
-| iOS, macOS, tvOS, watchOS | Swift package `JsonUI` (targets `JsonUICore`, `JsonUI`) | SwiftUI | JavaScriptCore |
+| iOS, macOS, tvOS, watchOS | Swift package `JsonUI` (targets `JsonUICore`, `JsonUI`, sources in `ios/`) | SwiftUI | JavaScriptCore |
 | Android | Gradle modules `jsonui-core`, `jsonui-compose` (in `android/`) | Jetpack Compose (Material 3) | QuickJS |
 
 JsonUI is the successor of [SwiftUIJson](https://github.com/bclnet/SwiftUIJson).
@@ -49,8 +49,9 @@ The format is documented in [docs/SCHEMA.md](docs/SCHEMA.md) and
 
 ## iOS / SwiftUI
 
-Add the package (the `Package.swift` is at the repository root) and depend on
-the `JsonUI` product.
+Add the package by URL (the `Package.swift` stays at the repository root so
+SwiftPM can find it; the sources live in `ios/`) and depend on the `JsonUI`
+product.
 
 ```swift
 import SwiftUI
@@ -144,7 +145,8 @@ Node; `scripts/sync-prelude.py` re-embeds it into both libraries after edits.
 ## Repository layout
 
 ```
-Package.swift, Sources/, Tests/   Swift package (JsonUICore, JsonUI)
+Package.swift                     Swift package manifest (must be at the root for SwiftPM URLs)
+ios/                              Swift sources and tests (JsonUICore, JsonUI)
 android/                          Gradle project (jsonui-core, jsonui-compose)
 docs/SCHEMA.md                    format reference
 schema/jsonui.schema.json         JSON Schema for editors and validation

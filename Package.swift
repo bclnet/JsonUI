@@ -1,6 +1,8 @@
 // swift-tools-version:5.9
 import PackageDescription
 
+// The manifest must stay at the repository root so the package can be added by URL;
+// the Swift sources live in ios/ next to the Android project in android/.
 let package = Package(
     name: "JsonUI",
     platforms: [
@@ -15,18 +17,18 @@ let package = Package(
     targets: [
         .target(
             name: "JsonUICore",
-            path: "Sources/JsonUICore"),
+            path: "ios/Sources/JsonUICore"),
         .target(
             name: "JsonUI",
             dependencies: ["JsonUICore"],
-            path: "Sources/JsonUI"),
+            path: "ios/Sources/JsonUI"),
         .testTarget(
             name: "JsonUICoreTests",
             dependencies: ["JsonUICore"],
-            path: "Tests/JsonUICoreTests"),
+            path: "ios/Tests/JsonUICoreTests"),
         .testTarget(
             name: "JsonUITests",
             dependencies: ["JsonUI"],
-            path: "Tests/JsonUITests"),
+            path: "ios/Tests/JsonUITests"),
     ]
 )

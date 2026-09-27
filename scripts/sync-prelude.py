@@ -8,7 +8,7 @@ import pathlib
 root = pathlib.Path(__file__).resolve().parent.parent
 prelude = (root / "scripts" / "jsonui-prelude.js").read_text()
 
-swift_target = root / "Sources" / "JsonUICore" / "ScriptPrelude.swift"
+swift_target = root / "ios" / "Sources" / "JsonUICore" / "ScriptPrelude.swift"
 kotlin_target = root / "android" / "jsonui-core" / "src" / "main" / "kotlin" / "com" / "bclnet" / "jsonui" / "ScriptPrelude.kt"
 
 header = "GENERATED FILE - do not edit. Source: scripts/jsonui-prelude.js (run scripts/sync-prelude.py)."

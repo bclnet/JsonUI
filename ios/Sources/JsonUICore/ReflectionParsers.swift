@@ -2,7 +2,7 @@
 //  ReflectionParsers.swift
 //  JsonUI
 //
-//  Pure parsers used by the SwiftUI view reflector (Sources/JsonUI/JsonReflector.swift).
+//  Pure parsers used by the SwiftUI view reflector (ios/Sources/JsonUI/JsonReflector.swift).
 //  SwiftUI's `Font`, `Color` and `Edge.Set` do not expose their configuration,
 //  but their `description` / raw values do, and these helpers turn those into
 //  JsonUI style values. They live in the core so they can be tested on Linux.

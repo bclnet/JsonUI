@@ -74,7 +74,7 @@ struct LoginScreen: View {
 
 * `JsonUIModel` owns the state (`model.store`), the script engine and the host actions (`model.on(name) { ... }`). It is an `ObservableObject`; the view re-renders on every state change, including changes made by scripts.
 * Custom node types: `JsonViewRegistry.shared.register("Signature") { node, context in SignatureView(...) }`.
-* `JsonPreview(json: ...)` shows the rendered form next to its live state and JSON in an Xcode preview.
+* `JsonPreview { LoginForm() }` reflects an existing SwiftUI view into a document and shows the original, the JsonUI rendering and the JSON side by side (see "Getting JSON from an existing view" below). `JsonPreview(json:)` shows a document on its own.
 * `JsonUICore` (Foundation only, builds on Linux) contains the model, `JsonStore`, `JsonContext`, `NoScriptEngine` and a builder DSL:
 
 ```swift
@@ -113,7 +113,7 @@ fun LoginScreen(json: String) {
 
 * `JsonUIModel` mirrors the Swift model: `model.store`, `model.actions`, `model.on(name) { ... }`, `model.version` (a Compose state that recomposes readers).
 * Custom node types: `JsonViewRegistry.shared.register("Signature") { node, context, model -> SignatureView(...) }`.
-* `JsonPreview(json)` renders the form above its state and JSON for `@Preview` composables.
+* `JsonPreview { LoginForm() }` reflects an existing composable into a document and shows it next to the JsonUI rendering and the JSON; `JsonPreview(json)` shows a document on its own.
 * `jsonui-core` is a plain Kotlin/JVM module with the model, `JsonStore`, `JsonContext`, `NoScriptEngine` and the DSL:
 
 ```kotlin
@@ -127,6 +127,70 @@ val doc = jsonDocument(state = mapOf("email" to "")) {
 }
 val json = doc.toJsonString()
 ```
+
+## Getting JSON from an existing view
+
+This is the workflow SwiftUIJson's `JsonPreview` provided: build the screen
+natively, wrap it, copy the JSON.
+
+**SwiftUI.** `JsonReflector` walks the live view with `Mirror` (the same
+internal field names SwiftUIJson used) and emits the document:
+
+```swift
+struct LoginForm: View {
+    @State private var email = ""
+    @State private var remember = false
+    var body: some View {
+        Form {
+            TextField("Email", text: $email).jsonKey("email")
+            Toggle("Remember me", isOn: $remember)
+            Button("Sign in") { signIn() }.jsonAction("signIn")
+        }
+    }
+}
+
+struct LoginForm_Previews: PreviewProvider {
+    static var previews: some View { JsonPreview { LoginForm() } }
+}
+
+let document = JsonDocument(reflecting: LoginForm())   // or JsonReflector().reflect(view)
+```
+
+* Bindings become state keys. The key comes from `.jsonKey("email")`, else from the `@State` property the binding was made from when that can be inferred (same type and current value), else `text1`, `isOn2`, ...
+* Closures cannot be serialized, so button actions, `onAppear` and stepper closures are registered as host actions on the reflector's `JsonActions` (`.jsonAction("signIn")` names them, otherwise `action1`, ...). The preview's rendered copy calls the original closures.
+* Supported: `Text` (verbatim, localized, interpolated), `TextField`, `SecureField`, `TextEditor`, `Toggle`, `Button` (with role and button style), `Picker` (tags become option values), `DatePicker`, `Slider`, `Stepper` (as +/− buttons), `ProgressView`, `Image`, `Label`, `Link`, `Form`, `List`, `Section`, stacks, `ScrollView`, `NavigationView`/`NavigationStack`, `Group`, `Spacer`, `Divider`, `if`/`else`, optionals, `AnyView`, custom views (their `body` is reflected) and the modifiers `padding`, `frame`, `background` (colors), `foregroundColor`, `font`, `bold`, `italic`, `opacity`, `cornerRadius`, `disabled`, `lineLimit`, `multilineTextAlignment`, `onAppear`, `hidden`. `ForEach` rows cannot be evaluated and produce a placeholder template.
+* Anything else becomes an `Unsupported` node plus an entry in `JsonReflector.warnings`, shown in the preview. SwiftUI's internals are private, so a SwiftUI release can rename a field; the reflector then degrades to warnings rather than crashing.
+
+**Compose.** A composable is a function, not a value tree, so there is nothing
+to mirror. The Android reflector reads the composable's **semantics tree**
+instead (the public `RootForTest` / `SemanticsOwner` API used by accessibility
+and UI tests) and maps it: text, text fields (`EditableText`, password), switches
+and checkboxes, radio groups (→ `Picker`), buttons, sliders, progress bars,
+icons, disabled state, and layout direction inferred from geometry
+(`VStack`/`HStack`/`ZStack`).
+
+```kotlin
+@Composable
+fun LoginForm() {
+    Column {
+        OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") },
+            modifier = Modifier.jsonKey("email"))
+        Switch(checked = remember, onCheckedChange = { remember = it })
+        Button(onClick = { signIn() }, modifier = Modifier.jsonAction("signIn")) { Text("Sign in") }
+    }
+}
+
+@Preview
+@Composable
+fun LoginPreview() = JsonPreview { LoginForm() }
+```
+
+`Modifier.jsonKey` (or a `testTag`) names the state key of an input and
+`Modifier.jsonAction` names the host action of a clickable. The semantics
+`OnClick`, `SetText` and `SetProgress` actions of the original composable are
+registered as host actions, so the rendered copy drives the original. Fonts,
+colors and paddings are not part of semantics and are not reflected; adjust
+them in the JSON.
 
 ## Script runtime
 

@@ -53,6 +53,52 @@ final class JsonUITests: XCTestCase {
     #endif
 
     #if canImport(SwiftUI)
+    struct SampleForm: View {
+        @State var email = "a@b.co"
+        @State var remember = false
+        var body: some View {
+            Form {
+                Section(header: Text("Account")) {
+                    TextField("Email", text: $email)
+                    Toggle("Remember me", isOn: $remember)
+                }
+                Button("Sign in") { }.jsonAction("signIn")
+                Text("Hello").font(.headline).padding(8)
+            }
+        }
+    }
+
+    /// Runs under Xcode only: exercises the Mirror based reflector against real SwiftUI views.
+    func testReflectsSwiftUIView() throws {
+        let reflector = JsonReflector()
+        let document = reflector.reflect(SampleForm())
+        XCTAssertEqual(document.root.kind, .form, "\(reflector.warnings)")
+        let sections = document.root.content
+        XCTAssertGreaterThanOrEqual(sections.count, 3)
+        let section = sections[0]
+        XCTAssertEqual(section.kind, .section)
+        XCTAssertEqual(section["header"], "Account")
+        let fields = section.content
+        XCTAssertEqual(fields.count, 2)
+        XCTAssertEqual(fields[0].kind, .textField)
+        XCTAssertEqual(fields[0]["title"], "Email")
+        XCTAssertEqual(fields[0]["text"], "$email")
+        XCTAssertEqual(fields[1].kind, .toggle)
+        XCTAssertEqual(fields[1]["isOn"], "$remember")
+        XCTAssertEqual(document.header.state["email"], "a@b.co")
+        XCTAssertEqual(document.header.state["remember"], false)
+        let button = sections[1]
+        XCTAssertEqual(button.kind, .button)
+        XCTAssertEqual(button["label"], "Sign in")
+        XCTAssertEqual(JsonAction(button["action"]), .host(name: "signIn", args: [:]))
+        XCTAssertTrue(reflector.actions.contains("signIn"))
+        let text = sections[2]
+        XCTAssertEqual(text.kind, .text)
+        XCTAssertEqual(text["font"], "headline")
+        XCTAssertEqual(text["padding"], 8)
+        XCTAssertTrue(reflector.warnings.isEmpty, "\(reflector.warnings)")
+    }
+
     func testRegistryNormalizesTypeNames() {
         let registry = JsonViewRegistry()
         registry.register(":MyWidget") { _, _ in Text("x") }

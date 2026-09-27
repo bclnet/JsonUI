@@ -64,6 +64,10 @@ public struct JsonNodeView: View {
     private var custom: some View {
         if let builder = model.registry.builder(for: node.type) {
             builder(node, context, model)
+        } else if node.type == "Unsupported" {
+            Text("JsonUI: unsupported view \(node["name"].stringValue ?? "")")
+                .font(.caption)
+                .foregroundColor(.red)
         } else {
             Text("JsonUI: unknown view \"\(node.type)\"")
                 .font(.caption)

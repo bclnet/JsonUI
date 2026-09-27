@@ -112,6 +112,7 @@ private fun NodeContent(node: JsonNode, context: JsonContext, model: JsonUIModel
         null -> {
             val builder = model.registry.builder(node.type)
             if (builder != null) builder(node, context, model)
+            else if (node.type == "Unsupported") Text("JsonUI: unsupported view ${node["name"].stringValue ?: ""}", modifier, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
             else Text("JsonUI: unknown view \"${node.type}\"", modifier, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
         }
     }

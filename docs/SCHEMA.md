@@ -194,5 +194,18 @@ Colors are `#rrggbb`, `#aarrggbb`, a named color (`red`, `blue`, `green`,
 
 Both libraries include a small builder DSL that produces the same node model,
 so a form can be assembled in Swift or Kotlin and serialized to this format.
-The `JsonPreview` view shows the rendered form next to its JSON, replacing the
-original SwiftUIJson `JsonPreview`.
+
+## Reflecting an existing view
+
+`JsonPreview { MyView() }` (SwiftUI) and `JsonPreview { MyComposable() }`
+(Compose) derive a document from a natively built screen and show it next to
+the JsonUI rendering and the JSON text, as SwiftUIJson's `JsonPreview` did.
+The Swift reflector mirrors the live view hierarchy; the Android reflector
+reads the composable's semantics tree. Reflected documents use the same node
+types as hand written ones, with these conventions:
+
+* state keys: `.jsonKey("name")` / `Modifier.jsonKey("name")`, else the
+  `@State` property name (Swift), else `text1`, `isOn1`, `value1`, `selection1`, `date1`
+* host actions for closures: `.jsonAction("name")` / `Modifier.jsonAction("name")`,
+  else `action1`, `commit1`, `appear1`, `toggle1`, `setText1`, ...
+* views that cannot be reflected: `{ "type": "Unsupported", "name": "<type>" }`

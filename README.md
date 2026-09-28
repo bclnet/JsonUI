@@ -20,6 +20,17 @@ The format is documented in [docs/SCHEMA.md](docs/SCHEMA.md) and
 [schema/jsonui.schema.json](schema/jsonui.schema.json). Example forms are in
 [samples/](samples/).
 
+## Related libraries
+
+| library | adds |
+| --- | --- |
+| [JsonScene](https://github.com/bclnet/JsonScene) | the `Scene` node: animated 3D actors with bodies, mobility and behaviours, rendered with SceneKit, Filament and the Meta Spatial SDK |
+| [JsonMind](https://github.com/bclnet/JsonMind) | minds for documents: personas, senses, token budgets and the command vocabulary; a streaming `MindProvider` is the seam for TokenX |
+| [QRX](https://github.com/bclnet/QRX) | the apps: QR codes that place forms and scenes in the room on iOS, Android and Quest |
+
+Documents in all of them share JsonUI's state, actions, scripts and
+[fragments](docs/SCHEMA.md#fragments).
+
 ## A document
 
 ```json

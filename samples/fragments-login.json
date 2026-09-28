@@ -1,0 +1,18 @@
+{
+  "_ui": {
+    "version": 1,
+    "state": { "email": "", "password": "", "remember": false },
+    "fragments": {
+      "remember": { "type": "Toggle", "title": "Remember me", "isOn": "$remember" }
+    }
+  },
+  "type": "Form",
+  "content": [
+    { "type": "Section", "header": "Account", "content": [
+      { "$ref": "shared/fields.json#/email" },
+      { "$ref": "shared/fields.json#/password" },
+      { "$ref": "#remember" }
+    ] },
+    { "$ref": "shared/fields.json#/submit", "title": "Sign in" }
+  ]
+}

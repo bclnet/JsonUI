@@ -58,6 +58,38 @@ Every node may also have:
 | `modifiers` | array | ordered list of modifier objects (see Modifiers) |
 | shorthand modifier props | see Modifiers | `padding`, `frame`, `font`, ... |
 
+## Fragments
+
+A fragment is a piece of JSON reused by reference. Anywhere a value is
+expected, an object with `$ref` is replaced by the value it names before the
+document is parsed:
+
+```json
+{ "$ref": "shared/fields.json#/email" }
+{ "$ref": "#remember" }
+{ "$ref": "https://cdn.example.com/forms/address.json" }
+{ "$ref": "#remember", "title": "Keep me signed in" }
+```
+
+| reference | meaning |
+| --- | --- |
+| `url#/json/pointer` | the value at that JSON pointer (RFC 6901) in the document at `url`; relative URLs resolve against the referring document's URL |
+| `url` | the whole document at `url` |
+| `#/json/pointer` | a pointer into the referring document itself |
+| `#name` | shorthand for `#/_ui/fragments/name`: `_ui.fragments` is a dictionary of reusable pieces that are not rendered |
+
+Keys beside `$ref` override the fragment's keys (a `null` removes one), so a
+shared field can be reused with another title or binding. When a reference
+inside a `content` array names an array, its items are spliced into the list.
+References inside a fetched fragment resolve against that fragment's own
+document, so shared files can refer to each other. Cycles are an error.
+
+Resolution is done by `JsonFragmentResolver` (Swift) / `JsonFragments`
+(Kotlin): give it a loader for documents, or ask it for
+`externalReferences` and register the fetched documents yourself when loading
+must be asynchronous. The same mechanism serves JsonScene scenes (bodies and
+minds as shared files) and QRX glyph documents.
+
 ## Dynamic values
 
 Any property value may be a literal, a **binding** or an **expression**.

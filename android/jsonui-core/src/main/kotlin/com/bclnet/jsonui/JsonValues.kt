@@ -88,6 +88,18 @@ val JsonElement.stringValue: String?
         else -> toJsonString()
     }
 
+/** The string only when the value is a JSON string (`stringValue` renders any value as text). */
+val JsonElement.text: String? get() = (this as? JsonPrimitive)?.takeIf { it.isString }?.content
+
+/** The number only when the value is a JSON number. */
+val JsonElement.numberValue: Double? get() = (this as? JsonPrimitive)?.takeIf { it !is JsonNull && !it.isString }?.content?.toDoubleOrNull()
+
+/** The integer only when the value is an integral JSON number. */
+val JsonElement.integerValue: Int? get() = numberValue?.takeIf { it == Math.rint(it) && Math.abs(it) < 1e15 }?.toInt()
+
+/** The bool only when the value is a JSON bool. */
+val JsonElement.flag: Boolean? get() = (this as? JsonPrimitive)?.takeIf { it !is JsonNull && !it.isString }?.content?.toBooleanStrictOrNull()
+
 val JsonElement.arrayValue: List<JsonElement>? get() = (this as? JsonArray)?.toList()
 
 val JsonElement.objectValue: Map<String, JsonElement>? get() = this as? JsonObject

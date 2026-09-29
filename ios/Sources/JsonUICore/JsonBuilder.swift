@@ -2,10 +2,9 @@
 //  JsonBuilder.swift
 //  JsonUI
 //
-//  A small builder DSL for assembling documents in Swift. It is the
-//  replacement for SwiftUIJson's reflection based encoder: instead of
-//  reflecting a live SwiftUI hierarchy, a form is described with these
-//  helpers (or by hand) and serialized with `JsonDocument.jsonString()`.
+//  A small builder DSL for assembling documents in Swift: a form is
+//  described with these helpers (or by hand) and serialized with
+//  `JsonDocument.jsonString()`.
 //
 //      let doc = JsonDocument(header: JsonUIHeader(state: ["email": ""])) {
 //          JsonNode.form {

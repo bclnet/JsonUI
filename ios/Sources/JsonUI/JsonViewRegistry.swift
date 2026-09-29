@@ -2,8 +2,7 @@
 //  JsonViewRegistry.swift
 //  JsonUI
 //
-//  Host applications register renderers for custom node types here. This is
-//  the SwiftUI counterpart of SwiftUIJson's `PType.register`.
+//  Host applications register renderers for custom node types here.
 //
 
 #if canImport(SwiftUI)

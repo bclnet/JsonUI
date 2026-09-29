@@ -3,9 +3,8 @@
 //  JsonUI
 //
 //  A property value that may be a literal, a state binding, a script
-//  expression, a template string or a localized string. This replaces the
-//  `.var(self)` slot mechanism of SwiftUIJson with an explicit, portable
-//  syntax (see docs/SCHEMA.md "Dynamic values").
+//  expression, a template string or a localized string, in the portable
+//  syntax of docs/SCHEMA.md "Dynamic values".
 //
 
 import Foundation

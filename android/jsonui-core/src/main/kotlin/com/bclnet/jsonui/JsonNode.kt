@@ -68,7 +68,7 @@ data class JsonNode(val type: String, val props: Map<String, JsonElement> = empt
     override fun toString(): String = value.toJsonString(pretty = true)
 
     companion object {
-        /** Strips the SwiftUIJson namespace prefix (`":Text"` → `"Text"`) and any module prefix. */
+        /** Strips a leading colon (`":Text"` → `"Text"`), any module prefix and a generic suffix. */
         fun normalize(type: String): String {
             var t = type
             if (t.startsWith(":")) t = t.substring(1)

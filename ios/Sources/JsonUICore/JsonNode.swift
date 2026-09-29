@@ -30,7 +30,7 @@ public struct JsonNode: Equatable, Hashable {
         self.init(type: kind.rawValue, props: props)
     }
 
-    /// Strips the SwiftUIJson namespace prefix (`":Text"` → `"Text"`) and any module prefix (`"SwiftUI.Text"`).
+    /// Strips a leading colon (`":Text"` → `"Text"`), any module prefix (`"SwiftUI.Text"`) and a generic suffix.
     public static func normalize(type: String) -> String {
         var t = type
         if t.hasPrefix(":") { t.removeFirst() }

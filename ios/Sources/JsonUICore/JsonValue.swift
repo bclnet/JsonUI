@@ -2,9 +2,7 @@
 //  JsonValue.swift
 //  JsonUI
 //
-//  A dynamically typed JSON value. This replaces the `PType`/`DynaCodable`
-//  machinery of SwiftUIJson: instead of reflecting SwiftUI internals, the
-//  library works on a plain JSON tree that both platforms share.
+//  A dynamically typed JSON value: the plain JSON tree both platforms share.
 //
 
 import Foundation

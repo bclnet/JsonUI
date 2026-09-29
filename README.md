@@ -7,14 +7,11 @@ Render forms and simple screens on iOS and Android from one JSON definition.
 | iOS, macOS, tvOS, watchOS | Swift package `JsonUI` (targets `JsonUICore`, `JsonUI`, sources in `ios/`) | SwiftUI | JavaScriptCore |
 | Android | Gradle modules `jsonui-core`, `jsonui-compose` (in `android/`) | Jetpack Compose (Material 3) | QuickJS |
 
-JsonUI is the successor of [SwiftUIJson](https://github.com/bclnet/SwiftUIJson).
-SwiftUIJson reflected a live SwiftUI hierarchy through `Mirror` to produce
-JSON and rebuilt it with a type registry; that tied it to private SwiftUI
-internals and could not be ported. JsonUI keeps the ideas (a `type`-keyed
-node tree, `content` for children, a context with state and actions, a
-`JsonPreview` for development) but makes the document the source of truth:
-both platforms parse the same JSON, bind inputs to a shared state store and run
-the same JavaScript for validation and logic.
+The document is the source of truth: a `type`-keyed node tree with `content`
+for children and a `_ui` header carrying state, script and strings. Both
+platforms parse the same JSON, bind inputs to a shared state store and run
+the same JavaScript for validation and logic. A `JsonPreview` on each
+platform derives a document from a natively built screen for development.
 
 The format is documented in [docs/SCHEMA.md](docs/SCHEMA.md) and
 [schema/jsonui.schema.json](schema/jsonui.schema.json). Example forms are in
@@ -141,11 +138,10 @@ val json = doc.toJsonString()
 
 ## Getting JSON from an existing view
 
-This is the workflow SwiftUIJson's `JsonPreview` provided: build the screen
-natively, wrap it, copy the JSON.
+Build the screen natively, wrap it in `JsonPreview`, copy the JSON.
 
-**SwiftUI.** `JsonReflector` walks the live view with `Mirror` (the same
-internal field names SwiftUIJson used) and emits the document:
+**SwiftUI.** `JsonReflector` walks the live view with `Mirror` and emits the
+document:
 
 ```swift
 struct LoginForm: View {

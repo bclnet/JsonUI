@@ -2,9 +2,8 @@
 //  JsonAction.swift
 //  JsonUI
 //
-//  Actions replace SwiftUIJson's `ActionManager` (which registered Swift
-//  closures under UUID keys and so could not be serialized). An action is
-//  data: a host action name, a script, a state assignment or a sequence.
+//  An action is data, so it serializes with the document: a host action
+//  name, a script, a state assignment or a sequence.
 //
 
 import Foundation

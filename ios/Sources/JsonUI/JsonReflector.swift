@@ -2,13 +2,12 @@
 //  JsonReflector.swift
 //  JsonUI
 //
-//  Reflects a live SwiftUI view hierarchy into a JsonUI document, the way
-//  SwiftUIJson's encoders did with `Mirror`. Field names of SwiftUI's internal
-//  types come from SwiftUIJson (`_tree`, `storage`, `_text`, `__isOn`,
-//  `_PaddingLayout.edges`, ...). Because those names are private API they can
-//  change between SwiftUI releases, so every lookup is tolerant: anything that
-//  cannot be read becomes a warning and an `Unsupported` node rather than a
-//  crash.
+//  Reflects a live SwiftUI view hierarchy into a JsonUI document with
+//  `Mirror`. The field names of SwiftUI's internal types (`_tree`, `storage`,
+//  `_text`, `__isOn`, `_PaddingLayout.edges`, ...) are private API and can
+//  change between SwiftUI releases, so every lookup is tolerant: anything
+//  that cannot be read becomes a warning and an `Unsupported` node rather
+//  than a crash.
 //
 //  Closures (button actions, `onAppear`, stepper increments) cannot be
 //  serialized, so they are registered as host actions on the reflector's

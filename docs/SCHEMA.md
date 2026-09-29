@@ -5,11 +5,11 @@ document is rendered by the Swift package (SwiftUI) and by the Android library
 (Jetpack Compose). Dynamic behaviour is provided by an embedded JavaScript
 engine: JavaScriptCore on Apple platforms and QuickJS on Android.
 
-The format is a refactoring of the original SwiftUIJson output: nodes carry a
-`type` key, containers use `content`, view modifiers are expressed as
-properties, and the leading `_ui` header holds the document context (initial
-state, script). The old `":Text"` spelling of type names (SwiftUI namespace
-prefix) is accepted and treated the same as `"Text"`.
+Nodes carry a `type` key, containers use `content`, view modifiers are
+expressed as properties, and the leading `_ui` header holds the document
+context (initial state, script). Type names are normalized before lookup: a
+leading colon, a module prefix (`"SwiftUI.Text"`) and a generic suffix are
+stripped, so `":Text"` and `"Text"` name the same node.
 
 ## Document
 
@@ -231,7 +231,7 @@ so a form can be assembled in Swift or Kotlin and serialized to this format.
 
 `JsonPreview { MyView() }` (SwiftUI) and `JsonPreview { MyComposable() }`
 (Compose) derive a document from a natively built screen and show it next to
-the JsonUI rendering and the JSON text, as SwiftUIJson's `JsonPreview` did.
+the JsonUI rendering and the JSON text.
 The Swift reflector mirrors the live view hierarchy; the Android reflector
 reads the composable's semantics tree. Reflected documents use the same node
 types as hand written ones, with these conventions:

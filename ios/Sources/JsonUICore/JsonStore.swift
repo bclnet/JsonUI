@@ -2,8 +2,7 @@
 //  JsonStore.swift
 //  JsonUI
 //
-//  The form state. Replaces the `JsonContext` slots / `DataManager` of
-//  SwiftUIJson with an observable key/value store keyed by binding paths.
+//  The form state: an observable key/value store keyed by binding paths.
 //
 
 import Foundation

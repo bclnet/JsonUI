@@ -2,9 +2,9 @@
 //  JsonPreview.swift
 //  JsonUI
 //
-//  Development aid, the counterpart of SwiftUIJson's `JsonPreview`. Wrap an
-//  existing SwiftUI view to see it side by side with the JsonUI rendering of
-//  the document reflected from it, plus the document itself:
+//  Development aid. Wrap an existing SwiftUI view to see it side by side
+//  with the JsonUI rendering of the document reflected from it, plus the
+//  document itself:
 //
 //      struct LoginForm_Previews: PreviewProvider {
 //          static var previews: some View {

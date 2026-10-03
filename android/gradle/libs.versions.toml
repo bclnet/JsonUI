@@ -4,7 +4,7 @@ kotlin = "2.2.0"
 serialization = "1.8.0"
 composeBom = "2025.02.00"
 activityCompose = "1.10.0"
-quickjs = "0.9.2"
+quickjs = "3.2.3"
 junit = "4.13.2"
 androidxJunit = "1.2.1"
 androidxRunner = "1.6.2"
@@ -19,7 +19,7 @@ compose-material-icons = { module = "androidx.compose.material:material-icons-ex
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
-quickjs-android = { module = "app.cash.quickjs:quickjs-android", version.ref = "quickjs" }
+quickjs-android = { module = "wang.harlon.quickjs:wrapper-android", version.ref = "quickjs" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxRunner" }

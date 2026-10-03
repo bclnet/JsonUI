@@ -24,7 +24,7 @@ ios/Sources/JsonUICore        Foundation only: JsonValue, JsonDocument, JsonNode
 ios/Sources/JsonUI            SwiftUI: JsonNodeView, JsonViewRegistry (custom nodes), JsonPreview, JavaScriptCoreEngine
 ios/Tests                     JsonUICoreTests run on Linux; JsonUITests need Xcode
 android/jsonui-core           Kotlin/JVM mirror of JsonUICore (JsonFragments.kt, JsonValues.kt, ...)
-android/jsonui-compose        Compose renderer + QuickJS engine (minSdk 26)
+android/jsonui-compose        Compose renderer + QuickJS engine (minSdk 26); QuickJsEngine wraps wang.harlon.quickjs
 scripts/jsonui-prelude.js     the shared JS prelude; sync-prelude.py copies it into both platforms, test-prelude.js tests it
 ```
 
@@ -33,6 +33,8 @@ scripts/jsonui-prelude.js     the shared JS prelude; sync-prelude.py copies it i
 ```
 swift build && swift test                 # Linux or macOS: core tests (SwiftUI target compiles only in Xcode)
 cd android && ./gradlew build             # JVM tests for jsonui-core, AAR for jsonui-compose
+cd android && ./gradlew :jsonui-compose:connectedDebugAndroidTest   # QuickJsEngineTest; needs a device or emulator
+                                          # (set ANDROID_SERIAL when adb lists the same device twice)
 node scripts/test-prelude.js              # prelude tests
 python3 scripts/sync-prelude.py           # after editing the prelude; CI fails if the copies drift
 ```
@@ -61,4 +63,10 @@ CI (`.github/workflows`) runs all of the above plus an iOS Simulator build.
 - The Swift 6 toolchain on Linux compiles only Foundation targets; anything under
   `#if canImport(SwiftUI)` is not checked there. Parse-check with `swiftc -parse` at least.
 - jsonui-compose needs minSdk 26 for java.time; lower it and lint fails.
+- Native libraries must be built for 16 KB pages, or Android 16 shows "this app isn't 16 KB
+  compatible" on every launch of any app that embeds JsonUI. That is why QuickJS comes from
+  `wang.harlon.quickjs:wrapper-android` (app.cash.quickjs stopped at 0.9.2 with a 4 KB library).
+  Check a new native dependency with `llvm-objdump -p lib.so` (LOAD segments must be `2**14`).
+- In that QuickJS wrapper Java-side handles are reference counted: release a `JSObject` you created
+  or got back from `evaluate`, but never the context's global object, which the context owns.
 - Commit messages must not name AI models; the required trailers are added by the session.

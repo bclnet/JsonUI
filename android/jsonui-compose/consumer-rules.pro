@@ -1,3 +1,2 @@
-# QuickJS uses JNI; keep the bridge interface so its methods stay callable from native code.
--keep interface com.bclnet.jsonui.compose.QuickJsHostBridge { *; }
--keep class * implements com.bclnet.jsonui.compose.QuickJsHostBridge { *; }
+# QuickJS uses JNI; keep the wrapper's classes so native code can still find and call them.
+-keep class com.whl.quickjs.** { *; }
